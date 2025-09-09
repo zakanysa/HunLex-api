@@ -1,0 +1,26 @@
+{
+  "name": "hunlex-api",
+  "version": "1.0.0",
+  "description": "API for Hungarian lawyers and law firms",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "scrape": "node src/scraper/run-scraper.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "api",
+    "hungary",
+    "lawyers"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.0",
+    "cheerio": "^1.0.0-rc.12",
+    "dotenv": "^16.4.5",
+    "fastify": "^4.28.1",
+    "pg": "^8.12.0"
+  }
+}
