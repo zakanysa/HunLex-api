@@ -1,0 +1,17 @@
+name: Daily Scrape
+
+on:
+  schedule:
+    # Run daily at midnight UTC (adjust timezone as needed)
+    - cron: '0 0 * * *'
+  workflow_dispatch: # Allow manual triggering
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger scraper
+        run: |
+          curl -X POST https://hunlex-api.onrender.com/api/scrape \
+            -H "Content-Type: application/json" \
+            -d '{"secret":"${{ secrets.SCRAPE_SECRET }}"}'
