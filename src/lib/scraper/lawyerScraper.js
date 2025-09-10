@@ -232,7 +232,7 @@ class HungarianLawyerScraper {
                 };
                 await this.db.query(query);
             } else {
-                const firmResult = await this.db.query('SELECT id FROM law_firms WHERE name = $1', [lawyer.office.name]);
+                const firmResult = await this.db.query('SELECT id FROM law_firms WHERE name = $1', [lawyer.office?.name]);
                 const firmId = firmResult.rows[0]?.id;
 
                 const query = {
