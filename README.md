@@ -19,15 +19,17 @@ A HunLex API magyar ügyvédek és ügyvédi irodák átfogó adatbázisához bi
 
 ### API végpontok
 
+**Nyilvános API URL**: `https://hunlex-api.onrender.com`
+
 #### Ügyvédek
 
-- `GET /api/lawyers` - Összes ügyvéd lekérése
-- `GET /api/lawyers/:kasz` - Ügyvéd lekérése KASZ szám alapján
+- `GET https://hunlex-api.onrender.com/api/lawyers` - Összes ügyvéd lekérése
+- `GET https://hunlex-api.onrender.com/api/lawyers/:kasz` - Ügyvéd lekérése KASZ szám alapján
 
 #### Ügyvédi irodák
 
-- `GET /api/firms` - Összes ügyvédi iroda lekérése
-- `GET /api/firms/:id` - Ügyvédi iroda lekérése ID alapján
+- `GET https://hunlex-api.onrender.com/api/firms` - Összes ügyvédi iroda lekérése
+- `GET https://hunlex-api.onrender.com/api/firms/:id` - Ügyvédi iroda lekérése ID alapján
 
 ### Gyors kezdés
 
@@ -100,24 +102,75 @@ HunLex API provides comprehensive access to Hungarian lawyers and law firms data
 
 ### API Endpoints
 
+**Public API URL**: `https://hunlex-api.onrender.com`
+
 #### Lawyers
 
-- `GET /api/lawyers` - Get all lawyers
-- `GET /api/lawyers/:kasz` - Get lawyer by KASZ number
+- `GET https://hunlex-api.onrender.com/api/lawyers` - Get all lawyers
+- `GET https://hunlex-api.onrender.com/api/lawyers/:kasz` - Get lawyer by KASZ number
 
 #### Law Firms
 
-- `GET /api/firms` - Get all law firms  
-- `GET /api/firms/:id` - Get law firm by ID
+- `GET https://hunlex-api.onrender.com/api/firms` - Get all law firms  
+- `GET https://hunlex-api.onrender.com/api/firms/:id` - Get law firm by ID
 
-### Example Response
+### Example Responses
 
+#### Lawyer Response
 ```json
 {
-  "kasz": "12345",
-  "name": "Dr. Example Lawyer",
-  "firm": "Example Law Firm",
-  "address": "Budapest, Hungary"
+  "kasz": "36056385",
+  "name": "ÁDÁM SÁNDOR",
+  "status": "AKTÍV",
+  "chamber": "SZEGEDI ÜGYVÉDI KAMARA",
+  "email": "IRODA@ADAMSANDOR.HU",
+  "practice_areas": ["BÜNTETŐJOG", "ADÓJOG"],
+  "languages": ["ANGOL", "NÉMET"],
+  "licenses": [
+    {
+      "number": "Ü-102560",
+      "status": "ÉRVÉNYES"
+    }
+  ],
+  "chamber_position": null,
+  "substitute_name": null,
+  "substitute_kasz": null,
+  "lawyer_type": "firm",
+  "office_name": "Ádám Sándor Ügyvédi Iroda",
+  "created_at": "2025-09-10T19:40:01.375Z",
+  "updated_at": "2025-09-11T11:34:59.028Z"
+}
+```
+
+#### Law Firm Response
+```json
+{
+  "id": 1,
+  "name": "Example Ügyvédi Iroda",
+  "type": "Ügyvédi Iroda",
+  "status": "AKTÍV",
+  "registering_chamber": "BUDAPESTI ÜGYVÉDI KAMARA",
+  "members": ["DR. KOVÁCS PÉTER", "DR. NAGY ANNA"],
+  "contact": {
+    "phone": "+36 1 234 5678",
+    "email": "info@example.hu",
+    "tax_number": "12345678-2-41",
+    "egovernment_id": "12345678"
+  },
+  "address": {
+    "postal_code": "1052",
+    "city": "Budapest",
+    "street": "Váci utca 1.",
+    "full_address": "1052 Budapest, Váci utca 1."
+  },
+  "correspondence_address": null,
+  "office_manager": "Dr. Kovács Péter",
+  "office_leader": {
+    "name": "DR. KOVÁCS PÉTER",
+    "kasz": "12345"
+  },
+  "created_at": "2025-09-11T10:15:30.123Z",
+  "updated_at": "2025-09-11T10:15:30.123Z"
 }
 ```
 

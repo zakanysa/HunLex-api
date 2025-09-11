@@ -8,6 +8,9 @@
 # Claude Code instructions
 CLAUDE.md
 
+# Testing/utility scripts
+count_api_data.py
+
 # Dependencies
 node_modules/
 
