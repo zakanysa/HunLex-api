@@ -246,16 +246,45 @@ class HungarianLawFirmScraper {
 
     async scrapeAll() {
         console.log(`Starting to scrape ${this.totalPages} pages of law firms...`);
+        const batchSize = 10; // Process 10 pages concurrently
+        const allFirms = [];
         
-        for (let page = 1; page <= this.totalPages; page++) {
-            const firms = await this.scrapePage(page);
-            if (firms.length > 0) {
-                await this.saveFirms(firms);
+        for (let i = 0; i < this.totalPages; i += batchSize) {
+            const endPage = Math.min(i + batchSize, this.totalPages);
+            const pagePromises = [];
+            
+            // Create promises for batch of pages
+            for (let page = i + 1; page <= endPage; page++) {
+                pagePromises.push(this.scrapePage(page));
             }
             
-            // Respectful delay between requests
-            if (page < this.totalPages) {
-                await this.sleep(this.delay);
+            console.log(`Processing firm pages ${i + 1} to ${endPage}...`);
+            const batchResults = await Promise.allSettled(pagePromises);
+            
+            // Handle results and log any failures
+            const successfulResults = [];
+            batchResults.forEach((result, index) => {
+                if (result.status === 'fulfilled') {
+                    successfulResults.push(result.value);
+                } else {
+                    console.error(`Firm page ${i + 1 + index} failed:`, result.reason?.message || result.reason);
+                }
+            });
+            
+            // Collect all firms from successful results
+            const batchFirms = successfulResults.flat().filter(firm => firm);
+            allFirms.push(...batchFirms);
+            
+            console.log(`Batch complete. Found ${batchFirms.length} firms in pages ${i + 1}-${endPage}`);
+            
+            // Save batch to database
+            if (batchFirms.length > 0) {
+                await this.saveFirms(batchFirms);
+            }
+            
+            // Shorter delay between batches
+            if (endPage < this.totalPages) {
+                await this.sleep(500); // 0.5 second between batches
             }
         }
 
