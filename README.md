@@ -1,6 +1,6 @@
 # HunLex API
 
-*Magyar verzió lent | English version below*
+*English version below*
 
 ---
 
