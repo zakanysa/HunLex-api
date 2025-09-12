@@ -232,7 +232,7 @@ class HungarianLawyerScraper {
                 };
                 await this.db.query(query);
             } else {
-                const firmResult = await this.db.query('SELECT id FROM law_firms WHERE name = $1', [lawyer.office.name]);
+                const firmResult = await this.db.query('SELECT id FROM law_firms WHERE name = $1', [lawyer.office?.name]);
                 const firmId = firmResult.rows[0]?.id;
 
                 const query = {
@@ -282,16 +282,45 @@ class HungarianLawyerScraper {
 
     async scrapeAll() {
         console.log(`Starting to scrape ${this.totalPages} pages...`);
+        const batchSize = 10; // Process 10 pages concurrently
+        const allLawyers = [];
         
-        for (let page = 1; page <= this.totalPages; page++) {
-            const lawyers = await this.scrapePage(page);
-            if (lawyers.length > 0) {
-                await this.saveLawyers(lawyers);
+        for (let i = 0; i < this.totalPages; i += batchSize) {
+            const endPage = Math.min(i + batchSize, this.totalPages);
+            const pagePromises = [];
+            
+            // Create promises for batch of pages
+            for (let page = i + 1; page <= endPage; page++) {
+                pagePromises.push(this.scrapePage(page));
             }
             
-            // Respectful delay between requests
-            if (page < this.totalPages) {
-                await this.sleep(this.delay);
+            console.log(`Processing pages ${i + 1} to ${endPage}...`);
+            const batchResults = await Promise.allSettled(pagePromises);
+            
+            // Handle results and log any failures
+            const successfulResults = [];
+            batchResults.forEach((result, index) => {
+                if (result.status === 'fulfilled') {
+                    successfulResults.push(result.value);
+                } else {
+                    console.error(`Page ${i + 1 + index} failed:`, result.reason?.message || result.reason);
+                }
+            });
+            
+            // Collect all lawyers from successful results
+            const batchLawyers = successfulResults.flat().filter(lawyer => lawyer);
+            allLawyers.push(...batchLawyers);
+            
+            console.log(`Batch complete. Found ${batchLawyers.length} lawyers in pages ${i + 1}-${endPage}`);
+            
+            // Save batch to database
+            if (batchLawyers.length > 0) {
+                await this.saveLawyers(batchLawyers);
+            }
+            
+            // Shorter delay between batches
+            if (endPage < this.totalPages) {
+                await this.sleep(500); // 0.5 second between batches
             }
         }
         

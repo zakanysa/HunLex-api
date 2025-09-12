@@ -8,6 +8,7 @@ const fastify = require('fastify')({
 fastify.register(require('./api/lawyers'));
 fastify.register(require('./api/firms'));
 fastify.register(require('./api/scrape'));
+fastify.register(require('./api/setup'));
 
 fastify.get('/', async (request, reply) => {
   return { hello: 'world' };
